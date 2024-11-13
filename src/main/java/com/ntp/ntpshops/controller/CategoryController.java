@@ -1,13 +1,11 @@
 package com.ntp.ntpshops.controller;
 
 import com.ntp.ntpshops.exception.AlreadyExitsException;
-import com.ntp.ntpshops.exception.CategoryNotFoundException;
 import com.ntp.ntpshops.exception.ResourceNotFoundException;
 import com.ntp.ntpshops.model.Category;
 import com.ntp.ntpshops.response.ApiResponse;
-import com.ntp.ntpshops.service.category.CategoryService;
+import com.ntp.ntpshops.service.category.ICategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +17,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("${api.prefix}/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllCategories() {
