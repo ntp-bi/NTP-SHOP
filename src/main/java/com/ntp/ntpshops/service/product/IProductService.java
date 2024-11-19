@@ -1,5 +1,6 @@
 package com.ntp.ntpshops.service.product;
 
+import com.ntp.ntpshops.dto.ProductDTO;
 import com.ntp.ntpshops.model.Product;
 import com.ntp.ntpshops.request.AddProductRequest;
 import com.ntp.ntpshops.request.UpdateProductRequest;
@@ -28,4 +29,8 @@ public interface IProductService {
     List<Product> getProductsByBrandAndName(String brand, String name);
 
     Long countProductsByBrandAndName(String brand, String name);
+
+    List<ProductDTO> getConvertedProducts(List<Product> products);
+
+    ProductDTO convertToDTO(Product product);
 }

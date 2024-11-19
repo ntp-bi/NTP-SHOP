@@ -1,5 +1,6 @@
 package com.ntp.ntpshops.controller;
 
+import com.ntp.ntpshops.dto.ProductDTO;
 import com.ntp.ntpshops.exception.ResourceNotFoundException;
 import com.ntp.ntpshops.model.Product;
 import com.ntp.ntpshops.request.AddProductRequest;
@@ -24,14 +25,17 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(new ApiResponse("Success!", products));
+        List<ProductDTO> convertedProducts = productService.getConvertedProducts(products);
+        return ResponseEntity.ok(new ApiResponse("Success!", convertedProducts));
     }
 
     @GetMapping("/product/{id}/product")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long id) {
         try {
             Product product = productService.getProductById(id);
-            return ResponseEntity.ok(new ApiResponse("Success!", product));
+            ProductDTO productDTO = productService.convertToDTO(product);
+
+            return ResponseEntity.ok(new ApiResponse("Success!", productDTO));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -58,7 +62,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/{id}/delete")
+    @DeleteMapping("/product/{id}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id) {
         try {
             productService.deleteProductById(id);
@@ -77,8 +81,9 @@ public class ProductController {
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found", null));
             }
+            List<ProductDTO> convertedProducts = productService.getConvertedProducts(products);
 
-            return ResponseEntity.ok(new ApiResponse("Success!", products));
+            return ResponseEntity.ok(new ApiResponse("Success!", convertedProducts));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
@@ -100,7 +105,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/{name}/product")
+    @GetMapping("/products/{name}/products")
     public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name) {
         try {
             List<Product> products = productService.getProductsByName(name);
@@ -149,7 +154,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse> countProductsByBrandAndName(@RequestParam String brand,
                                                                    @RequestParam String name) {
         try {
-            var productCount = productService.getProductsByBrandAndName(brand, name);
+            var productCount = productService.countProductsByBrandAndName(brand, name);
             return ResponseEntity.ok(new ApiResponse("Product count!", productCount));
         } catch (Exception e) {
             return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));

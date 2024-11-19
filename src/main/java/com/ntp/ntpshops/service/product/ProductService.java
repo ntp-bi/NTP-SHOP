@@ -1,13 +1,18 @@
 package com.ntp.ntpshops.service.product;
 
+import com.ntp.ntpshops.dto.ImageDTO;
+import com.ntp.ntpshops.dto.ProductDTO;
 import com.ntp.ntpshops.exception.ProductNotFoundException;
 import com.ntp.ntpshops.model.Category;
+import com.ntp.ntpshops.model.Image;
 import com.ntp.ntpshops.model.Product;
 import com.ntp.ntpshops.repository.CategoryRepository;
+import com.ntp.ntpshops.repository.ImageRepository;
 import com.ntp.ntpshops.repository.ProductRepository;
 import com.ntp.ntpshops.request.AddProductRequest;
 import com.ntp.ntpshops.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +23,9 @@ import java.util.Optional;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -114,5 +122,21 @@ public class ProductService implements IProductService {
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDTO> getConvertedProducts(List<Product> products) {
+        return products.stream().map(this::convertToDTO).toList();
+    }
+
+    @Override
+    public ProductDTO convertToDTO(Product product) {
+        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDTO> imageDTOS = images.stream()
+                .map(image -> modelMapper.map(images, ImageDTO.class))
+                .toList();
+        productDTO.setImages(imageDTOS);
+        return productDTO;
     }
 }
