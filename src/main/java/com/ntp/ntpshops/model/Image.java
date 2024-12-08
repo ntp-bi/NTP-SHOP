@@ -1,13 +1,12 @@
 package com.ntp.ntpshops.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Blob;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,6 +16,7 @@ public class Image {
     private Long id;
     private String fileName;
     private String fileType;
+
     @Lob
     private Blob image;
     private String downloadUrl;
