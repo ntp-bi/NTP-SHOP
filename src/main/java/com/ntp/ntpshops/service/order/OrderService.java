@@ -1,5 +1,6 @@
 package com.ntp.ntpshops.service.order;
 
+import com.ntp.ntpshops.dto.OrderDTO;
 import com.ntp.ntpshops.enums.OrderStatus;
 import com.ntp.ntpshops.exception.ResourceNotFoundException;
 import com.ntp.ntpshops.model.Cart;
@@ -11,6 +12,7 @@ import com.ntp.ntpshops.repository.ProductRepository;
 import com.ntp.ntpshops.service.cart.CartService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
     @Transactional
     @Override
@@ -69,13 +72,19 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDTO getOrder(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+                .map(this::convertToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Not order found"));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderDTO> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::convertToDto).toList();
+    }
+
+    private OrderDTO convertToDto(Order order) {
+        return modelMapper.map(order, OrderDTO.class);
     }
 }

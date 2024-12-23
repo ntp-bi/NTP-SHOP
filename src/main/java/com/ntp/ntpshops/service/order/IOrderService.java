@@ -1,5 +1,6 @@
 package com.ntp.ntpshops.service.order;
 
+import com.ntp.ntpshops.dto.OrderDTO;
 import com.ntp.ntpshops.model.Order;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public interface IOrderService {
     Order placeOrder(Long userId);
 
-    Order getOrder(Long orderId);
+    OrderDTO getOrder(Long orderId);
 
-    List<Order> getUserOrders(Long userId);
+    List<OrderDTO> getUserOrders(Long userId);
 }
