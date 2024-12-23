@@ -1,5 +1,6 @@
 package com.ntp.ntpshops.service.user;
 
+import com.ntp.ntpshops.dto.UserDTO;
 import com.ntp.ntpshops.model.User;
 import com.ntp.ntpshops.request.CreateUserRequest;
 import com.ntp.ntpshops.request.UserUpdateRequest;
@@ -13,4 +14,5 @@ public interface IUserService {
 
     void deleteUser(Long userId);
 
+    UserDTO convertUserToDto(User user);
 }
