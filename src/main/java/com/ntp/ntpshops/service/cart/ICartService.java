@@ -1,6 +1,7 @@
 package com.ntp.ntpshops.service.cart;
 
 import com.ntp.ntpshops.model.Cart;
+import com.ntp.ntpshops.model.User;
 
 import java.math.BigDecimal;
 
@@ -11,7 +12,7 @@ public interface ICartService {
 
     BigDecimal getTotalPrice(Long id);
 
-    Long initializeNewCart();
+    Cart initializeNewCart(User user);
 
     Cart getCartByUserId(Long userId);
 }

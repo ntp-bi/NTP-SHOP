@@ -2,7 +2,6 @@ package com.ntp.ntpshops.model;
 
 import com.ntp.ntpshops.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
